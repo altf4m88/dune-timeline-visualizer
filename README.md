@@ -219,8 +219,10 @@ and the scene runs on a fake clock, one fixed step per frame, so every run sees 
 - `scenes`: every scene stands in clear view where its event opens: at least half of its ground on screen,
   beside the card and out from under the labels' boxes. Dunes in front of a scene are not checked.
 
-The page exposes its scene to the tests only with `?e2e` in the address. GitHub Actions
-(`.github/workflows/ci.yml`) runs the type check, both test suites and the build on every push.
+The page exposes its scene to the tests only with `?e2e` in the address. Set `E2E_BASE_URL` to run them
+against a running copy instead of `vite preview`: the Docker image (whose nginx adds the security headers
+`vite preview` does not) or the deployed service. GitHub Actions (`.github/workflows/ci.yml`) runs the type
+check and unit tests on every push, then builds the Docker image and runs the browser tests against it.
 
 ## Deploy to Google Cloud Run
 
@@ -234,6 +236,22 @@ nginx on the port Cloud Run provides (`$PORT`, 8080 by default). The image serve
 - **Compression and health:** gzip, and a `/healthz` endpoint for uptime checks.
 - **Sizing:** the image is about 90 MB, and nginx idles at about 5 MiB of memory, so 256 MiB is ample. It scales
   to zero when idle, so it costs nothing while nobody is visiting.
+
+### Before you deploy
+
+1. **CI is green** on the commit you are shipping. It builds this image, serves it on a non-default `$PORT`,
+   and runs the browser tests against it, under its real headers.
+2. **Pick the region** nearest your visitors (`us-central1` below is only the default; `europe-west1`,
+   `asia-southeast1`, `asia-southeast2` and others work the same). Every command below takes `--region`.
+3. **Optionally, check the image yourself**. You need Docker and Chromium (`npx playwright install chromium`):
+
+   ```bash
+   docker build -t golden-path . && docker run --rm -d --name golden-path -p 8080:8080 golden-path
+   ```
+
+   ```bash
+   E2E_BASE_URL=http://localhost:8080 npm run e2e
+   ```
 
 ### One command
 
@@ -292,6 +310,57 @@ with its build ID and deploys:
 To build on every push, connect the GitHub repository as a
 [Cloud Build trigger](https://cloud.google.com/build/docs/automating-builds/create-manage-triggers) that uses this
 file.
+
+### After you deploy
+
+Check the service with the URL the deploy printed (`gcloud run services describe golden-path --region us-central1
+--format='value(status.url)'` shows it again):
+
+```bash
+curl -s https://YOUR-SERVICE-URL/healthz
+```
+
+```bash
+curl -sI https://YOUR-SERVICE-URL/ | grep -i -e content-security-policy -e cache-control
+```
+
+The same browser tests run against it, with Chromium installed locally (about six minutes):
+
+```bash
+E2E_BASE_URL=https://YOUR-SERVICE-URL npm run e2e
+```
+
+### Trying a release before visitors see it
+
+Once the service exists (the first deploy has nothing else to serve, so this is refused for it), deploy a
+release as a revision that takes no traffic, with a tag. It gets its own URL
+(`https://candidate---golden-path-….run.app`) to check as above:
+
+```bash
+gcloud run deploy golden-path --source . --region us-central1 --no-traffic --tag candidate
+```
+
+Then send everyone to it:
+
+```bash
+gcloud run services update-traffic golden-path --region us-central1 --to-tags candidate=100
+```
+
+### Rolling back
+
+Every deploy is a new revision, and the old ones stay. List them, then send all traffic back to the last good one:
+
+```bash
+gcloud run revisions list --service golden-path --region us-central1
+```
+
+```bash
+gcloud run services update-traffic golden-path --region us-central1 --to-revisions REVISION-NAME=100
+```
+
+Roll back if the page fails to load, if the console shows errors, or if `/healthz` stops answering. Note that
+after a traffic split or a rollback, later deploys keep that split until you send traffic to the latest again
+(`--to-latest`).
 
 ### Notes
 
