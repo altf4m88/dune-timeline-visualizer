@@ -1,5 +1,3 @@
-import type { UndatedNote } from '../data/types';
-import { SET_PIECES } from '../scene/props/catalog';
 import type { Resolved } from '../timeline/model';
 import {
   CATEGORY_LABEL,
@@ -12,30 +10,10 @@ import {
 import { h } from './dom';
 import { primerSections } from './primer';
 
-function share(res: Resolved, s0: number, s1: number): number {
-  return ((s1 - s0) / (res.max - res.min)) * 100;
-}
-
-const fmtPct = (x: number) => (x >= 10 ? x.toFixed(0) : x >= 1 ? x.toFixed(1) : x.toFixed(2));
-
-/** Numbers computed from the data, so the critique stays true if the data changes. */
-export function scaleFacts(res: Resolved): { imperium: number; novels: number; godEmperor: number } {
-  const imp = res.eras.find((e) => e.id === 'imperium');
-  const ge = res.eras.find((e) => e.id === 'god-emperor');
-  const novels = res.novels.reduce((sum, n) => sum + share(res, n.s0, n.s1), 0);
-  return {
-    imperium: imp ? share(res, imp.s0, imp.s1) : 0,
-    novels,
-    godEmperor: ge ? share(res, ge.s0, ge.s1) : 0,
-  };
-}
-
 /** A link out of the app, in a new tab that gets no handle back on this one. */
 const outLink = (href: string, text: string) => h('a', { href, target: '_blank', rel: 'noopener noreferrer' }, text);
 
-export function renderAbout(root: HTMLElement, res: Resolved, undated: UndatedNote[], onClose: () => void): void {
-  const facts = scaleFacts(res);
-  const novelTitle = new Map(res.novels.map((n) => [n.id, n.title]));
+export function renderAbout(root: HTMLElement, res: Resolved, onClose: () => void): void {
   root.replaceChildren(
     h(
       'div',
@@ -54,7 +32,7 @@ export function renderAbout(root: HTMLElement, res: Resolved, undated: UndatedNo
         h(
           'p',
           null,
-          "Frank Herbert's six novels, Dune (1965) to Chapterhouse: Dune (1985), with Dune's own appendices and glossary. That is all. The later prequels and sequels by other authors, and the Dune Encyclopedia, are left out on purpose. They contradict Herbert and each other, and mixing them is how most online timelines go wrong.",
+          "Frank Herbert's six novels, Dune (1965) to Chapterhouse: Dune (1985), with Dune's appendices and glossary. Prequels and sequels by other authors, and the Dune Encyclopedia, are left out.",
         ),
       ),
       h(
@@ -70,10 +48,10 @@ export function renderAbout(root: HTMLElement, res: Resolved, undated: UndatedNo
             null,
             h('span', { class: 'glyph-cage' }),
             h('b', null, MODE_LABEL.recalled),
-            ': reported by an in-universe source, such as the glossary, Irulan\'s histories or Leto II\'s journals. Herbert\'s narrators have agendas, and Irulan writes court propaganda.',
+            ': reported by an in-universe source, such as the glossary, Irulan\'s histories or Leto II\'s journals.',
           ),
           h('li', null, 'Colour and the tag on each label give the novel it comes from. Size gives how much it matters.'),
-          h('li', null, 'Beside the path: where each novel\'s story sits. Hanging under it, optionally: lifespans. Red arcs join statements of Herbert\'s that contradict each other. The world changes with the timeline: worms, spice and cities appear where the story puts them, and the desert greens under Leto II.'),
+          h('li', null, 'Beside the path: where each novel\'s story sits. Hanging under it, optionally: lifespans. Red arcs join statements of Herbert\'s that contradict each other.'),
         ),
         h(
           'ul',
@@ -113,46 +91,7 @@ export function renderAbout(root: HTMLElement, res: Resolved, undated: UndatedNo
         h(
           'p',
           null,
-          'On the page Shaddam IV is deposed at the Battle of Arrakeen (10193). Appendix IV says his reign ended with a regency in Irulan\'s name in 10196. Every later interval counts from that point, so the switch moves every derived date by three years and leaves the stated ones where they are. Watch Shaddam\'s death (stated, 10202) shift relative to Messiah.',
-        ),
-      ),
-      h(
-        'section',
-        null,
-        h('h3', null, 'Story scale vs. true scale'),
-        h(
-          'p',
-          null,
-          `Story scale gives space to where things happen. True scale is honest about time. On true scale the Corrino Imperium takes ${fmtPct(facts.imperium)}% of the path and Leto II's reign ${fmtPct(facts.godEmperor)}%, while the narratives of all six novels together take ${fmtPct(facts.novels)}%. Most of Herbert's history is the gaps between his books.`,
-        ),
-      ),
-      h(
-        'section',
-        null,
-        h('h3', null, 'The world around the path'),
-        h(
-          'p',
-          null,
-          'Each set piece stands beside the event it belongs to and is only there in the eras the books put it in. Arrive and it rises out of the sand; leave and it sinks again. The ground follows the story too: green under Leto II, scorched glass after Rakis burns, and no sandworms during his reign, when he is the last of them.',
-        ),
-        h(
-          'ul',
-          { class: 'legend-list' },
-          ...[...new Map(SET_PIECES.map((p) => [p.kind === 'worm' ? 'worm' : p.note, p])).values()].map((p) =>
-            h('li', null, p.kind === 'worm' ? 'Sandworms around Dune, the battle, Rakis and Chapterhouse, surfacing in arcs and sounding again.' : p.note),
-          ),
-        ),
-      ),
-      h(
-        'section',
-        null,
-        h('h3', null, 'Off the timeline: mentioned, never dated'),
-        h(
-          'ul',
-          { class: 'undated' },
-          ...undated.map((u) =>
-            h('li', null, h('b', null, u.title), h('span', { class: 'muted' }, ` · ${novelTitle.get(u.novel)}`), h('br'), u.note),
-          ),
+          'On the page Shaddam IV is deposed at the Battle of Arrakeen (10193). Appendix IV says his reign ended with a regency in Irulan\'s name in 10196. Every later interval counts from that point, so the switch moves every derived date by three years and leaves the stated ones where they are.',
         ),
       ),
       h(
@@ -189,7 +128,7 @@ export function renderAbout(root: HTMLElement, res: Resolved, undated: UndatedNo
       h(
         'p',
         { class: 'fineprint' },
-        'An unofficial fan project, not affiliated with or endorsed by the Herbert estate or any publisher or studio. Summaries are paraphrased; quotations are a few words long. The map of Arrakis is our own relief model, after the geography of the map and Cartographic Notes in Dune.',
+        'An unofficial fan project, not affiliated with or endorsed by the Herbert estate or any publisher or studio.',
       ),
     ),
   );

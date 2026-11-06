@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CONTRADICTIONS, ERAS, EVENTS, LIFELINES, NOVELS, UNDATED } from './data';
+import { CONTRADICTIONS, ERAS, EVENTS, LIFELINES, NOVELS } from './data';
 import type { Category, Certainty, Mode, NovelId, Reckoning } from './data/types';
 import { createDesert } from './scene/desert';
 import { defaultEye, eventDistance } from './scene/framing';
@@ -100,7 +100,7 @@ export function createApp(): void {
     );
   };
   const openAbout = () => {
-    renderAbout(aboutDlg, res, UNDATED, () => aboutDlg.close());
+    renderAbout(aboutDlg, res, () => aboutDlg.close());
     aboutDlg.showModal();
   };
   // Until the scene exists (or if it never can), picking from the index just closes it.

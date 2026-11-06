@@ -322,7 +322,7 @@ export class Panel {
             ),
           )
         : null,
-      h('p', { class: 'panel-source' }, 'After the map and Cartographic Notes in Dune. Heights are above the Great Bled.'),
+      h('p', { class: 'panel-source' }, 'Heights above the Great Bled, from the map and Cartographic Notes in Dune.'),
     );
     const nav = h(
       'nav',

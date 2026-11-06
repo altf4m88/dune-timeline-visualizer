@@ -1,4 +1,4 @@
-import type { Contradiction, Lifeline, UndatedNote } from './types';
+import type { Contradiction, Lifeline } from './types';
 
 /**
  * Lifespans. Where Dune's Appendix IV (the Almanak en-Ashraf) prints dates they are used as
@@ -80,53 +80,5 @@ export const CONTRADICTIONS: Contradiction[] = [
     b: 'irulan-regency',
     title: "Shaddam's reign ends 10193 or 10196?",
     note: "On the page Shaddam is deposed at Arrakeen. The Almanak says his reign ended with a 10,196 regency in Irulan's name. Every later date is a stated interval counted from this point, so the choice moves Messiah, Children, Leto II's death and Heretics. Use the Reckoning switch to watch them slide while the stated dates hold still.",
-  },
-];
-
-export const UNDATED: UndatedNote[] = [
-  {
-    title: 'House Atreides descends from the House of Atreus',
-    novel: 'god-emperor',
-    note: 'Leto II claims Agamemnon as an ancestor. It is the only bridge between our history and the Imperial calendar, and it has no date.',
-  },
-  {
-    title: 'The Zensunni forced migrations',
-    novel: 'dune',
-    note: "The glossary names stopping-places such as Poritrin, Bela Tegeuse and Harmonthep between the 1381 BG schism and Arrakis, but gives no dates for any stop or for the Fremen's arrival.",
-  },
-  {
-    title: 'The Orange Catholic Bible and the C.E.T.',
-    novel: 'dune',
-    note: 'Appendix II describes the Commission of Ecumenical Translators and the riots that followed. It is placed after the Jihad, but never pinned to a year.',
-  },
-  {
-    title: 'The discovery of melange',
-    novel: 'dune',
-    note: 'Spice underpins the Guild monopoly at year zero, so its discovery must come earlier. The novels never say when.',
-  },
-  {
-    title: 'The Great Convention, the Landsraad and CHOAM',
-    novel: 'dune',
-    note: "The political tripod Dune runs on (Emperor, Landsraad, Guild, with CHOAM as the purse) has no founding dates.",
-  },
-  {
-    title: "Pardot Kynes's arrival on Arrakis",
-    novel: 'dune',
-    note: 'Appendix I tells how the first Imperial Planetologist turned the Fremen toward terraforming. It gives no year. The tie is through his son Liet, who dies in 10191.',
-  },
-  {
-    title: 'The death of the Old Duke',
-    novel: 'dune',
-    note: "Paulus Atreides was killed by a Salusan bull in the ring, and its head hangs in the Arrakeen dining hall. It must fall before Paul's birth, but no year is given.",
-  },
-  {
-    title: 'How long the Famine Times lasted',
-    novel: 'heretics',
-    note: 'Remembered as a catastrophe after the Tyrant, with no length given.',
-  },
-  {
-    title: 'Who Daniel and Marty are',
-    novel: 'chapterhouse',
-    note: "Out of scope here by design: later books by other authors offer an answer. Herbert's own text stops at the question.",
   },
 ];

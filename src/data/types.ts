@@ -112,13 +112,6 @@ export interface LifeSegment {
   shiftEnd?: boolean;
 }
 
-/** Things the novels mention but never date. They cannot honestly be placed on an axis. */
-export interface UndatedNote {
-  title: string;
-  novel: NovelId;
-  note: string;
-}
-
 export interface Lifeline {
   id: string;
   name: string;
