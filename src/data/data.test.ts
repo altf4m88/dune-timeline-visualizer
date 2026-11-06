@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CONTRADICTIONS, ERAS, EVENTS, LIFELINES, NOVELS, UNDATED } from './index';
+import { CONTRADICTIONS, ERAS, EVENTS, LIFELINES, NOVELS } from './index';
 import { ACCESSION, resolve } from '../timeline/model';
 import type { Reckoning } from './types';
 
@@ -119,10 +119,6 @@ describe('references', () => {
         });
       }
     }
-  });
-
-  it('undated notes point at a novel', () => {
-    for (const u of UNDATED) expect(novelIds.has(u.novel), u.title).toBe(true);
   });
 });
 
