@@ -1418,6 +1418,23 @@ kbd {
 .glyph-cage {
   border: 1.5px dashed var(--accent);
 }
+.credits {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 18px;
+  margin: 0;
+}
+.credits dt {
+  color: var(--muted);
+}
+.credits dd {
+  margin: 0;
+  color: var(--ink);
+}
+.credits a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
 .fineprint {
   margin-top: 20px;
   font-size: 12px;

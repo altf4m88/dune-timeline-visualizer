@@ -50,5 +50,12 @@ test('the intro, stepping, the tour, search, reckoning and filters work without 
   await page.keyboard.press('Escape');
   await expect(page.locator('#panel')).toBeHidden();
 
+  // The ⓘ dialog says who made it, with links out.
+  await page.click('#btn-about');
+  await expect(page.locator('#about a[href="https://github.com/altf4m88"]')).toHaveText('@altf4m88');
+  await expect(page.locator('#about a[href="https://www.instagram.com/altf4m8/"]')).toHaveText('@altf4m8');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#about')).not.toBeVisible();
+
   expect(errors).toEqual([]);
 });
