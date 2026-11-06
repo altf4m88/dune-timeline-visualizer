@@ -30,6 +30,9 @@ export function scaleFacts(res: Resolved): { imperium: number; novels: number; g
   };
 }
 
+/** A link out of the app, in a new tab that gets no handle back on this one. */
+const outLink = (href: string, text: string) => h('a', { href, target: '_blank', rel: 'noopener noreferrer' }, text);
+
 export function renderAbout(root: HTMLElement, res: Resolved, undated: UndatedNote[], onClose: () => void): void {
   const facts = scaleFacts(res);
   const novelTitle = new Map(res.novels.map((n) => [n.id, n.title]));
@@ -166,6 +169,21 @@ export function renderAbout(root: HTMLElement, res: Resolved, undated: UndatedNo
           h('li', null, h('kbd', null, 'M'), ' the map of Arrakis, and back'),
           h('li', null, h('kbd', null, 'Esc'), ' close'),
           h('li', null, 'Drag to orbit, right-drag or two fingers to pan, scroll or pinch to zoom.'),
+        ),
+      ),
+      h(
+        'section',
+        null,
+        h('h3', null, 'About'),
+        h(
+          'dl',
+          { class: 'credits' },
+          h('dt', null, 'Developer'),
+          h('dd', null, 'altf4m88'),
+          h('dt', null, 'GitHub'),
+          h('dd', null, outLink('https://github.com/altf4m88', '@altf4m88')),
+          h('dt', null, 'Instagram'),
+          h('dd', null, outLink('https://www.instagram.com/altf4m8/', '@altf4m8')),
         ),
       ),
       h(
